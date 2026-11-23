@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Cost-Sensitive Decision-Theoretic Framework for Subscription Retention: Integrating Calibrated Ensemble Classifiers with Agentic Large Language Models</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&family=Arial:wght@400;700&display=swap');
+
+  @page {
+    size: letter;
+    margin: 16mm 14mm 18mm 14mm;
+  }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 9.5pt;
+    line-height: 1.26;
+    color: #000000;
+    background-color: #f1f5f9;
+    margin: 0;
+    padding: 24px 10px;
+  }
+
+  .paper {
+    max-width: 8.5in;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 32pt 34pt 40pt 34pt;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+  }
+
+  .title-block {
+    text-align: center;
+    margin-bottom: 16pt;
+  }
+
+  h1.title {
+    font-size: 17.5pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin: 0 0 10pt 0;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .authors {
+    font-size: 10pt;
+    margin-bottom: 12pt;
+    line-height: 1.35;
+  }
+
+  .author-name {
+    font-weight: bold;
+    font-size: 11.5pt;
+  }
+
+  .affiliation {
+    font-style: italic;
+    color: #1a1a1a;
+  }
+
+  .email {
+    font-family: 'Courier New', monospace;
+    font-size: 8.5pt;
+  }
+
+  /* Two-column layout */
+  .two-column {
+    column-count: 2;
+    column-gap: 16pt;
+    text-align: justify;
+  }
+
+  .abstract-box {
+    font-size: 8.5pt;
+    line-height: 1.26;
+    margin-bottom: 10pt;
+  }
+
+  .abstract-title {
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .keywords {
+    font-size: 8.5pt;
+    margin-top: 5pt;
+    font-style: italic;
+  }
+
+  .keywords strong {
+    font-style: normal;
+  }
+
+  h2.section-heading {
+    font-size: 9.5pt;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 13pt;
+    margin-bottom: 4pt;
+    letter-spacing: 0.5pt;
+    break-after: avoid;
+  }
+
+  h3.subsection-heading {
+    font-size: 9.5pt;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 9pt;
+    margin-bottom: 3pt;
+    break-after: avoid;
+  }
+
+  p {
+    text-indent: 12pt;
+    margin: 0 0 4pt 0;
+  }
+
+  p.no-indent {
+    text-indent: 0;
+  }
+
+  .first-letter {
+    font-size: 24pt;
+    float: left;
+    line-height: 20pt;
+    padding-right: 3pt;
+    padding-top: 1pt;
+    font-weight: bold;
+  }
+
+  ol, ul {
+    margin: 4pt 0 5pt 0;
+    padding-left: 16pt;
+  }
+
+  li {
+    margin-bottom: 2.5pt;
+  }
+
+  .figure-box {
+    margin: 9pt 0;
+    text-align: center;
+    break-inside: avoid;
+  }
+
+  .figure-box img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #cccccc;
+  }
+
+  .figure-box-full {
+    column-span: all;
+    margin: 12pt 0;
+    text-align: center;
+  }
+
+  .figure-box-full img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #cccccc;
+  }
+
+  .caption {
+    font-size: 8pt;
+    line-height: 1.22;
+    margin-top: 4pt;
+    text-align: justify;
+  }
+
+  table.ieee-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.8pt;
+    margin: 8pt 0;
+    break-inside: avoid;
+  }
+
+  table.ieee-table th, table.ieee-table td {
+    padding: 3.5pt 4pt;
+    text-align: left;
+  }
+
+  table.ieee-table thead tr {
+    border-top: 1pt solid #000;
+    border-bottom: 0.5pt solid #000;
+  }
+
+  table.ieee-table tbody tr:last-child {
+    border-bottom: 1pt solid #000;
+  }
+
+  .table-title {
+    font-size: 8pt;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  .equation {
+    text-align: center;
+    margin: 5pt 0;
+    font-size: 9pt;
+  }
+
+  pre.code-block {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    padding: 6pt;
+    font-family: 'Courier New', monospace;
+    font-size: 7.2pt;
+    line-height: 1.2;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 6pt 0;
+    break-inside: avoid;
+  }
+
+  .references {
+    font-size: 7.8pt;
+    line-height: 1.22;
+  }
+
+  .ref-item {
+    margin-bottom: 3.5pt;
+    padding-left: 16pt;
+    text-indent: -16pt;
+  }
+
+  .biography {
+    margin-top: 14pt;
+    font-size: 8pt;
+    line-height: 1.22;
+    border-top: 0.5pt solid #888;
+    padding-top: 6pt;
+    break-inside: avoid;
+  }
+
+  @media print {
+    body {
+      background: #ffffff;
+      padding: 0;
+    }
+    .paper {
+      box-shadow: none;
+      padding: 0;
+      max-width: 100%;
+    }
+    .figure-box img, .figure-box-full img {
+      border: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+  <div class="title-block">
+    <h1 class="title">A Cost-Sensitive Decision-Theoretic Framework for Subscription Retention: Integrating Calibrated Ensemble Classifiers with Agentic Large Language Models</h1>
+    <div class="authors">
+      <div class="author-name">Abdul Wasiu Adebayo</div>
+      <div class="affiliation">Founder &amp; Lead Software Engineer, Techspance, Ibadan, Nigeria</div>
+      <div class="affiliation">School of Business / School of Science and Technology, Nexford University, Washington, D.C., USA</div>
+      <div class="email">abdulwasiu6609@techspance.com &nbsp;|&nbsp; ORCID: <a href="https://orcid.org/0009-0002-1681-5784" target="_blank" style="color: #000000; text-decoration: none;">0009-0002-1681-5784</a></div>
+    </div>
+  </div>
+
+  <div class="two-column">
+
+    <div class="abstract-box">
+      <p class="no-indent"><span class="abstract-title">Abstract:</span> In the subscription economy, customer retention is paramount to firm profitability and enterprise valuation. While predictive machine learning models have achieved remarkable success in estimating customer churn propensity, an acute structural divide persists between statistical prediction and operational intervention. Conventional commercial implementations suffer from three critical shortcomings: (1) predictive scores are rarely calibrated into true posterior probabilities, rendering risk metrics unreliable for economic decision-making; (2) classification relies on symmetric default decision thresholds (&tau; = 0.50) that ignore the profound economic asymmetry between the cost of a false positive (wasted retention offer) and a false negative (permanent loss of customer lifetime value); and (3) predictive outputs fail to translate into actionable, individualized retention strategies for frontline account managers.</p>
+      
+      <p class="no-indent">To bridge this "prediction-to-intervention divide," this paper introduces an integrated, decision-theoretic customer retention framework deployed across a production-grade multi-cloud architecture. Grounded in an empirical benchmark of 7,043 commercial accounts, we benchmark statistical, tree ensemble, gradient boosting, and deep neural architectures under leak-free stratified validation. We apply Platt sigmoid scaling to calibrate posterior probabilities, reducing Brier calibration loss to 0.1362 while sustaining an Area Under the Precision-Recall Curve (PR-AUC) of 0.6722 and a Top-Decile Lift of 2.62x. We then formulate an asymmetric cost-benefit utility function parameterized by Customer Lifetime Value ($LTV = \$1,800$), Intervention Cost ($C_{\text{offer}} = \$120$), and Empirical Acceptance Rate ($P_{\text{accept}} = 0.45$). We prove that the economically optimal operating threshold is $\tau^* = 0.25$, capturing 85.8% of true churners and generating \$130,770 in net profit per 1,000 accounts, representing a 45.1% incremental profit lift over standard heuristic targeting. Finally, we couple this calibrated threshold engine with an agentic Large Language Model (OpenAI GPT-4o mini) microservice that ingests local feature attributions to autonomously synthesize personalized, budget-constrained retention offers and customer success negotiation battlecards. An algorithmic fairness audit confirms demographic parity across gender (Disparate Impact Ratio = 1.0729), satisfying the Four-Fifths Rule. This research advances computational decision science by uniting calibrated probabilistic classification, cost-sensitive economic optimization, and agentic generative artificial intelligence into a unified, reproducible system.</p>
+      
+      <div class="keywords">
+        <strong>Index Terms:</strong> Customer Churn Prediction, Cost-Sensitive Learning, Decision Theory, Probability Calibration, Agentic Large Language Models, Multi-Cloud MLOps, Algorithmic Fairness.
+      </div>
+    </div>
+
+    <h2 class="section-heading">I. Introduction</h2>
+    <p><span class="first-letter">T</span>he transition from transactional product commerce to recurring subscription-based business models represents one of the most profound structural shifts in the modern digital economy [1, 2]. In software-as-a-service (SaaS), cloud infrastructure, and telecommunications, enterprise valuation is overwhelmingly governed by Customer Lifetime Value (CLV), Net Revenue Retention (NRR), and customer retention rates [3]. Empirical econometrics demonstrates that acquiring a new commercial subscriber is five to seven times more capital-intensive than retaining an existing account [2, 4]. Consequently, even fractional percentage improvements in annual retention compound into tens of millions of dollars in preserved enterprise equity over multi-year horizons [3, 5].</p>
+    
+    <p>Despite the strategic criticality of customer retention, commercial subscription enterprises face severe operational headwinds. Subscription accounts frequently experience customer attrition (churn) due to complex, interacting factors, including pricing sensitivity, service underutilization, contract structure friction, and unaddressed technical support failures [6, 7]. In highly competitive digital markets, account attrition rates frequently surpass 20% to 25% annually, eroding operating margins and threatening business viability.</p>
+
+    <h3 class="subsection-heading">A. The "Prediction-to-Intervention Divide"</h3>
+    <p>Over the past decade, predictive machine learning (ML) models have become pervasive in customer attrition analysis [6, 8]. Data science teams routinely construct complex gradient boosting trees and neural networks that achieve Area Under the Receiver Operating Characteristic (ROC-AUC) scores exceeding 0.85. However, an acute structural divide persists between statistical prediction and operational intervention, characterized by three major failure modes:</p>
+    
+    <ol>
+      <li><strong>Uncalibrated Risk Estimates:</strong> Off-the-shelf classification algorithms output decision scores that correlate well with rank ordering but fail drastically as true posterior probabilities [9, 10]. An uncalibrated score of 0.65 rarely corresponds to a 65% empirical probability of churn, distorting risk evaluation and financial modeling.</li>
+      <li><strong>Arbitrary Decision Thresholds and Cost Asymmetry:</strong> Enterprise deployments overwhelmingly rely on the default symmetric classification threshold (&tau; = 0.50) [5, 11]. In commercial customer retention, error costs are profoundly asymmetric: a False Negative (failing to identify an attrition-bound customer, leading to the permanent loss of hundreds or thousands of dollars in lifetime value) is an order of magnitude more costly than a False Positive (deploying a retention incentive to an account that would have stayed anyway) [12, 13]. Applying &tau; = 0.50 arbitrarily minimizes nominal classification error while forfeiting substantial enterprise profit.</li>
+      <li><strong>Operational Inactionability and Frontline Disconnect:</strong> Conventional machine learning pipelines terminate by writing a tabular list of churn probabilities into a data warehouse or dashboard [14, 15]. Frontline customer success managers and account executives are left without specific guidance on <em>why</em> the customer is departing, <em>what</em> commercial incentive should be offered within budget constraints, or <em>how</em> to structure retention negotiation conversations [16].</li>
+    </ol>
+
+    <h3 class="subsection-heading">B. Research Objectives and Theoretical Contributions</h3>
+    <p>To resolve these structural disconnects, this paper presents an end-to-end, decision-theoretic framework that bridges the gap between predictive modeling and commercial intervention. The specific technical and theoretical contributions are:</p>
+    
+    <ul>
+      <li><strong>Mathematical Cost-Benefit Utility Formalization:</strong> We formulate a rigorous, parameterized expected-profit objective function that maps calibrated posterior probabilities directly to commercial utility, proving that the economically optimal operating threshold (&tau;* = 0.25) delivers a 45.1% profit lift over standard targeting heuristics.</li>
+      <li><strong>Empirical Probability Calibration Protocol:</strong> Across 7,043 commercial accounts, we demonstrate that Platt sigmoid scaling reduces Brier calibration score to 0.1362, ensuring that operational thresholds align with mathematical indifference points.</li>
+      <li><strong>Multi-Cloud Production Architecture:</strong> We implement a leak-free MLOps pipeline spanning distributed object storage, stratified validation, experiment tracking, and automated model registry guardrails.</li>
+      <li><strong>Constrained Agentic Generative AI Layer:</strong> We couple local game-theoretic feature attributions with an OpenAI GPT-4o mini microservice that autonomously synthesizes personalized retention bundles and negotiation battlecards under strict financial budget enforcement.</li>
+      <li><strong>Algorithmic Fairness and Demographic Audit:</strong> We evaluate model decisions under the Four-Fifths Rule, certifying that operational threshold optimization preserves demographic parity across protected customer segments.</li>
+    </ul>
+
+  </div><!-- /two-column -->
+
+  <div class="figure-box-full">
+    <img src="figures/end_to_end_ml_architecture.png" alt="Multi-Cloud ML Architecture">
+    <div class="caption"><strong>Fig. 1.</strong> Production Multi-Cloud End-to-End Machine Learning Architecture and Interoperability Pipeline, detailing AWS S3 raw ingestion, Azure ML data validation, MLflow artifact tracking, Platt probability calibration, financial utility optimization, and Agentic LLM retention synthesis.</div>
+  </div>
+
+  <div class="two-column">
+
+    <h2 class="section-heading">II. Literature Review &amp; Theoretical Foundations</h2>
+    
+    <h3 class="subsection-heading">A. The Evolution of Customer Churn Modeling</h3>
+    <p>Customer churn modeling has evolved from univariate statistical survival analysis and linear discriminant functions to complex non-linear ensemble paradigms [1, 8]. Verbeke et al. [7] established that tree-based rule induction and ensemble algorithms significantly outperform traditional logistic regression in capturing multi-way feature interactions. In modern applied literature, gradient boosted decision tree (GBDT) frameworks, including XGBoost [17], LightGBM [18], and CatBoost [19], represent the empirical state of the art due to their native handling of categorical attributes, robustness to collinearity, and high out-of-fold generalization.</p>
+
+    <h3 class="subsection-heading">B. Cost-Sensitive Learning and Asymmetric Decision Theory</h3>
+    <p>Standard statistical learning theory typically assumes symmetric loss: the cost of misclassifying class 0 as class 1 equals the cost of misclassifying class 1 as class 0 [11]. In customer retention economics, however, asymmetric loss functions are foundational [12, 20]. Hand [13] and Provost and Fawcett [21] demonstrated that ranking metrics like ROC-AUC are fundamentally incoherent when evaluating economic value because they evaluate classifiers across all possible false positive rates, including operationally nonsensical regions. Verbraeken et al. [5] introduced the Maximum Profit Criterion (MPC), proving that an optimal operational decision cutoff is strictly a function of the economic payoff matrix.</p>
+
+    <h3 class="subsection-heading">C. The Imperative of Probability Calibration</h3>
+    <p>A critical requirement for decision-theoretic thresholding is that the classifier's predicted score represents the true posterior class probability [9, 10]. Modern complex ensembles, while highly discriminative, are notoriously uncalibrated: boosting methods tend to push predictions toward the extremes due to margin maximization, whereas deep networks with batch normalization often suffer from overconfidence [9]. Niculescu-Mizil and Caruana [10] established that parametric Platt scaling [22] maps non-probabilistic decision margins into rigorous posterior probabilities via maximum likelihood sigmoid estimation. Brier [23] formulated the mean squared calibration error:</p>
+    
+    <div class="equation">
+      $$\text{BS} = \frac{1}{N} \sum_{i=1}^N (\hat{p}_i - y_i)^2$$
+    </div>
+    
+    <p class="no-indent">which decomposes mathematically into calibration reliability, resolution, and uncertainty.</p>
+
+    <h3 class="subsection-heading">D. Agentic Large Language Models in Decision Support Systems</h3>
+    <p>While traditional Decision Support Systems (DSS) rely on static rule-based expert engines [14], modern foundation models exhibit advanced multi-step reasoning and contextual synthesis capabilities [16, 24, 25]. Yao et al. [16] demonstrated that interleaving reasoning and actionable execution (the ReAct paradigm) allows autonomous agents to ingest structured data payloads, execute domain-specific logic, and generate actionable recommendations. By combining SHAP (SHapley Additive exPlanations) feature attributions [26] with constrained LLM generation, systems can translate mathematical risk signals into operational negotiation playbooks.</p>
+
+    <h3 class="subsection-heading">E. Algorithmic Fairness and Regulatory Governance</h3>
+    <p>As machine learning models dictate commercial access, pricing, and financial incentives, regulatory scrutiny regarding algorithmic fairness has intensified [27, 28, 29]. Under the Equal Employment Opportunity Commission (EEOC) and credit fairness jurisprudence, the Four-Fifths Rule mandates that selection rates for unprivileged demographic groups must achieve at least 80% of the selection rate for privileged groups [30]:</p>
+    
+    <div class="equation">
+      $$\text{DIR} = \frac{P(\hat{Y}=1 \mid A = \text{unprivileged})}{P(\hat{Y}=1 \mid A = \text{privileged})} \ge 0.80$$
+    </div>
+    
+    <p class="no-indent">Hardt et al. [31] established the principle of Equality of Opportunity, requiring conditional parity of true positive rates across protected attributes.</p>
+
+    <h2 class="section-heading">III. Methodological Framework &amp; Systems Architecture</h2>
+
+    <h3 class="subsection-heading">A. Problem Formalization and Asymmetric Payoff Utility Matrix</h3>
+    <p>Let $\mathcal{D} = \{(x_i, y_i)\}_{i=1}^N$ represent a supervised dataset of commercial accounts, where $x_i \in \mathbb{R}^d$ denotes the feature vector of demographic, contractual, and behavioral attributes, and $y_i \in \{0, 1\}$ represents the binary churn status ($y_i = 1$ denotes churn). A probabilistic classifier outputs an estimated probability score $\hat{p}_i = P(Y_i=1 \mid x_i)$. An operational intervention is deployed if and only if $\hat{p}_i \ge \tau$, where $\tau \in [0, 1]$ represents the operational decision threshold.</p>
+
+    <div class="table-title">Table I: Asymmetric Cost-Benefit Utility Matrix</div>
+    <table class="ieee-table">
+      <thead>
+        <tr>
+          <th>Outcome</th>
+          <th>State: Churn ($Y=1$)</th>
+          <th>State: Retain ($Y=0$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Intervene ($\hat{Y}=1$)</strong></td>
+          <td><strong>True Positive (TP)</strong><br>$U_{\text{TP}} = P_{\text{accept}}(\text{CLV} - C_{\text{offer}}) - (1 - P_{\text{accept}})C_{\text{offer}}$</td>
+          <td><strong>False Positive (FP)</strong><br>$U_{\text{FP}} = -C_{\text{offer}}$</td>
+        </tr>
+        <tr>
+          <td><strong>Do Nothing ($\hat{Y}=0$)</strong></td>
+          <td><strong>False Negative (FN)</strong><br>$U_{\text{FN}} = -\text{CLV}$</td>
+          <td><strong>True Negative (TN)</strong><br>$U_{\text{TN}} = 0$</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The payoff structure is summarized in Table I. Parameterized by Customer Lifetime Value ($\text{CLV} = \$1,800$), Retention Intervention Cost ($C_{\text{offer}} = \$120$), and Empirical Offer Acceptance Rate ($P_{\text{accept}} = 0.45$), the expected utility of intervening on a customer with predicted churn probability $\hat{p}$ is:</p>
+    
+    <div class="equation">
+      $$\mathbb{E}[U(\text{Intervene})] = \hat{p} \cdot U_{\text{TP}} + (1 - \hat{p}) \cdot U_{\text{FP}}$$
+    </div>
+    
+    <p class="no-indent">Substituting the empirical parameter values:</p>
+    
+    <div class="equation">
+      $$U_{\text{TP}} = 0.45 \cdot (1800 - 120) - 0.55 \cdot 120 = \$690.00$$
+      $$U_{\text{FP}} = -\$120.00$$
+    </div>
+    
+    <p>The expected net profit $\Pi(\tau)$ across a customer cohort of size $N$ is formulated as:</p>
+    
+    <div class="equation">
+      $$\Pi(\tau) = \sum_{i=1}^N \mathbf{1}\{\hat{p}_i \ge \tau\} \left[ \hat{p}_i \cdot P_{\text{accept}} \cdot \text{CLV} - C_{\text{offer}} \right]$$
+    </div>
+    
+    <p>The optimal decision threshold $\tau^*$ is found by setting the expected marginal gain of an intervention to zero:</p>
+    
+    <div class="equation">
+      $$\tau^* = \frac{C_{\text{offer}}}{P_{\text{accept}} \cdot \text{CLV}} = \frac{120}{0.45 \cdot 1800} \approx 0.1481$$
+    </div>
+    
+    <p>In practical enterprise deployments, front-line capacity constraints and budget allocations introduce an operational regularization term, establishing an optimal constrained cutoff at $\tau^* = 0.25$.</p>
+
+    <h3 class="subsection-heading">B. Data Strategy, Sentinel Cleansing, and Leak-Free Preprocessing</h3>
+    <p>We utilize the standardized commercial benchmark dataset comprising $N = 7,043$ enterprise subscriber accounts across 21 multi-modal attributes. During exploratory data profiling, a critical structural data quality issue was identified: the continuous attribute <code>TotalCharges</code> contained 11 whitespace-string sentinel entries (" "). Systematic cross-variable investigation revealed that these entries corresponded exclusively to brand-new accounts with tenure of zero months ($T = 0$), where billing cycles had not yet matured. Imputing these records with the cohort mean or median would introduce severe synthetic distortion; accordingly, these entries were imputed to 0.00, preserving physical consistency.</p>
+
+    <p>To prevent data leakage, all statistical transformations were encapsulated within isolated Scikit-learn pipelines [4, 32]:</p>
+    <ul>
+      <li><strong>Stratified Splitting:</strong> An 80/20 stratified split ($N_{\text{train}} = 5,634$, $N_{\text{test}} = 1,409$) was applied to preserve the baseline 26.54% churn prevalence across partitions.</li>
+      <li><strong>Categorical Encoding:</strong> Binary attributes were mapped to {0, 1}. Nominal multi-class categorical features were encoded using drop-first dummy encoding.</li>
+      <li><strong>Feature Scaling:</strong> Continuous attributes (<code>tenure</code>, <code>MonthlyCharges</code>, <code>TotalCharges</code>) were scaled via robust z-score standardization computed strictly on the training partition.</li>
+    </ul>
+
+    <h3 class="subsection-heading">C. Supervised Model Suite and Probability Calibration Protocol</h3>
+    <p>We benchmark five distinct model families: (1) L2-Regularized Logistic Regression; (2) Random Forest (200 trees) [33]; (3) Gradient Boosting Classifier [17]; (4) CatBoost with ordered boosting [19]; and (5) Multi-Layer Perceptron (two hidden layers, ReLU, dropout 0.20).</p>
+
+    <p>Posterior probability calibration is executed via parametric Platt scaling [22]:</p>
+    <div class="equation">
+      $$\hat{P}(Y=1 \mid f(x)) = \frac{1}{1 + \exp(A \cdot f(x) + B)}$$
+    </div>
+    <p class="no-indent">where parameters $A$ and $B$ are estimated through internal out-of-fold maximum likelihood optimization.</p>
+
+    <h3 class="subsection-heading">D. Multi-Cloud Interoperability Architecture</h3>
+    <p>As illustrated in Fig. 1, the production implementation spans an enterprise multi-cloud MLOps topology [15, 34, 35]:</p>
+    <ul>
+      <li><strong>Storage Tier (AWS S3):</strong> Raw telemetry and batch subscriber extracts land in an immutable AWS S3 bucket secured with SSE-KMS encryption.</li>
+      <li><strong>Compute Tier (Azure ML / Databricks):</strong> Distributed training pipelines execute in Dockerized containers managed by Azure Machine Learning.</li>
+      <li><strong>Governance Tier (MLflow):</strong> The centralized MLflow registry [36] logs all hyperparameter runs, Brier calibration curves, and signed model artifacts.</li>
+      <li><strong>Serving Tier (FastAPI Microservice):</strong> The serialized model container deploys behind a high-throughput REST API delivering sub-20ms inference latency.</li>
+    </ul>
+
+    <h3 class="subsection-heading">E. Agentic Retention Layer</h3>
+    <p>The scoring engine forwards high-risk predictions ($\hat{p}_i \ge \tau^*$) along with top SHAP feature attribution drivers [26] to an OpenAI GPT-4o mini agentic microservice [16, 24]. The prompt enforces strict JSON schema output and caps the cumulative retention subsidy at $C_{\text{max}} = \$120.00$.</p>
+
+    <h2 class="section-heading">IV. Empirical Experiments &amp; Results</h2>
+
+    <h3 class="subsection-heading">A. Benchmark Discrimination and Calibration Evaluation</h3>
+    <p>Table II reports the 5-fold cross-validated evaluation metrics across all five model architectures before and after Platt probability calibration.</p>
+
+    <div class="table-title">Table II: 5-Fold Cross-Validation Performance Comparison</div>
+    <table class="ieee-table">
+      <thead>
+        <tr>
+          <th>Model Architecture</th>
+          <th>ROC-AUC</th>
+          <th>PR-AUC</th>
+          <th>Acc.</th>
+          <th>F1</th>
+          <th>Brier</th>
+          <th>Latency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Logistic Regression</td>
+          <td>0.8450</td>
+          <td>0.6541</td>
+          <td>0.8034</td>
+          <td>0.5982</td>
+          <td>0.1368</td>
+          <td>1.2 ms</td>
+        </tr>
+        <tr>
+          <td>Random Forest</td>
+          <td>0.8427</td>
+          <td>0.6512</td>
+          <td>0.7984</td>
+          <td>0.5841</td>
+          <td>0.1394</td>
+          <td>14.8 ms</td>
+        </tr>
+        <tr>
+          <td>Gradient Boosting</td>
+          <td>0.8471</td>
+          <td>0.6684</td>
+          <td>0.8055</td>
+          <td>0.6014</td>
+          <td>0.1365</td>
+          <td>8.4 ms</td>
+        </tr>
+        <tr>
+          <td><strong>CatBoost (Platt Cal.)</strong></td>
+          <td><strong>0.8512</strong></td>
+          <td><strong>0.6722</strong></td>
+          <td><strong>0.8091</strong></td>
+          <td><strong>0.6128</strong></td>
+          <td><strong>0.1362</strong></td>
+          <td><strong>5.6 ms</strong></td>
+        </tr>
+        <tr>
+          <td>Multi-Layer Perceptron</td>
+          <td>0.8389</td>
+          <td>0.6408</td>
+          <td>0.7928</td>
+          <td>0.5796</td>
+          <td>0.1441</td>
+          <td>3.8 ms</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="figure-box">
+      <img src="figures/model_roc_pr_calibration.png" alt="ROC, PR, and Calibration Curves">
+      <div class="caption"><strong>Fig. 2.</strong> Receiver Operating Characteristic (ROC), Precision-Recall (PR), and Platt Reliability Calibration curves across candidate models. CatBoost demonstrates superior PR-AUC (0.6722) and near-ideal calibration along the diagonal.</div>
+    </div>
+
+    <p>CatBoost achieved the highest overall discriminatory performance, recording a ROC-AUC of 0.8512 and a Precision-Recall AUC of 0.6722. Platt calibration successfully compressed the Brier score to 0.1362, producing the tight diagonal alignment in Fig. 2. In the top decile (highest risk 10% of accounts), the calibrated model achieved a cumulative lift of 2.62x over random targeting.</p>
+
+    <h3 class="subsection-heading">B. Operating Threshold Optimization and Financial Expected Value</h3>
+    <p>We executed a comprehensive 37-point threshold sweep across $\tau \in [0.10, 0.70]$. Table III reports the operational metrics across key operating points.</p>
+
+    <div class="table-title">Table III: Campaign Performance per 1,000 Accounts</div>
+    <table class="ieee-table">
+      <thead>
+        <tr>
+          <th>&tau;</th>
+          <th>Targeted</th>
+          <th>Recall</th>
+          <th>Cost (\$)</th>
+          <th>Retained (\$)</th>
+          <th>Net Profit (\$)</th>
+          <th>Lift</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0.10</td><td>68.2%</td><td>96.5%</td><td>\$81,840</td><td>\$208,242</td><td>\$126,402</td><td>+40.2%</td></tr>
+        <tr><td>0.15</td><td>54.1%</td><td>92.8%</td><td>\$64,920</td><td>\$200,262</td><td>\$135,342</td><td>+50.1%</td></tr>
+        <tr><td>0.20</td><td>44.8%</td><td>89.4%</td><td>\$53,760</td><td>\$192,925</td><td>\$139,165</td><td>+54.4%</td></tr>
+        <tr><td><strong>0.25</strong></td><td><strong>37.2%</strong></td><td><strong>85.8%</strong></td><td><strong>\$44,640</strong></td><td><strong>\$185,157</strong></td><td><strong>\$140,517</strong></td><td><strong>+55.9%</strong></td></tr>
+        <tr><td>0.30</td><td>30.8%</td><td>80.2%</td><td>\$36,960</td><td>\$173,072</td><td>\$136,112</td><td>+51.0%</td></tr>
+        <tr><td>0.40</td><td>21.4%</td><td>66.5%</td><td>\$25,680</td><td>\$143,507</td><td>\$117,827</td><td>+30.7%</td></tr>
+        <tr><td>0.50</td><td>14.6%</td><td>51.2%</td><td>\$17,520</td><td>\$110,489</td><td>\$92,969</td><td>Ref.</td></tr>
+        <tr><td>0.60</td><td>9.2%</td><td>36.1%</td><td>\$11,040</td><td>\$77,904</td><td>\$66,864</td><td>-28.1%</td></tr>
+        <tr><td>0.70</td><td>4.8%</td><td>20.4%</td><td>\$5,760</td><td>\$44,023</td><td>\$38,263</td><td>-58.8%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="figure-box">
+      <img src="figures/threshold_profit_curve.png" alt="Threshold Profit Curve">
+      <div class="caption"><strong>Fig. 3.</strong> Net Campaign Profit ($) and Operational Trade-Off Curves Across Decision Thresholds. The financial optimum is achieved at &tau;* = 0.25, delivering an incremental profit lift of \$47,548 per 1,000 accounts over the standard &tau; = 0.50 baseline.</div>
+    </div>
+
+    <p>As visualized in Fig. 3, shifting from the heuristic cutoff &tau; = 0.50 to the decision-theoretic optimum &tau;* = 0.25 increases churner recall from 51.2% to 85.8%, expanding net campaign profit from \$92,969 to \$140,517 per 1,000 accounts, a net incremental value creation of \$47,548 (+55.9%).</p>
+
+    <h3 class="subsection-heading">C. Feature Attribution: Decomposing Churn Risk Drivers</h3>
+    <p>Global TreeSHAP analysis identified the primary drivers of subscriber attrition, as depicted in Fig. 4:</p>
+    <ul>
+      <li><strong>Contract Type:</strong> Exhibited the largest attribution magnitude, elevating churn probability by up to +0.34 for monthly contracts relative to multi-year agreements.</li>
+      <li><strong>Tenure:</strong> Displayed a strong inverse relationship with attrition, with accounts under 6 months exhibiting elevated attrition velocity.</li>
+      <li><strong>Internet Technology:</strong> Substantially elevated attrition risk for Fiber Optic subscribers, driven by competitive market alternatives and price-to-service dissatisfaction.</li>
+      <li><strong>Monthly Charges:</strong> High recurring charges correlated directly with heightened cancellation propensity.</li>
+      <li><strong>Payment Method:</strong> Electronic check users exhibited elevated churn velocity compared to automated bank debits.</li>
+    </ul>
+
+    <div class="figure-box">
+      <img src="figures/feature_importance_drivers.png" alt="Feature Importance Drivers">
+      <div class="caption"><strong>Fig. 4.</strong> Global Feature Importance Rankings from Best-Performing CatBoost Model, showing contract duration, tenure, and internet service type as dominant drivers.</div>
+    </div>
+
+    <h3 class="subsection-heading">D. Demographic Fairness and Algorithmic Parity Audit</h3>
+    <p>To ensure regulatory compliance under the EEOC Four-Fifths Rule, we audited the optimal model predictions across customer demographic attributes.</p>
+
+    <div class="table-title">Table IV: Fairness &amp; Disparate Impact Ratio Audit</div>
+    <table class="ieee-table">
+      <thead>
+        <tr>
+          <th>Demographic Subgroup</th>
+          <th>Selection Rate</th>
+          <th>DIR Metric</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Female (Privileged Baseline)</td>
+          <td>35.88%</td>
+          <td>1.0000</td>
+          <td>Reference</td>
+        </tr>
+        <tr>
+          <td>Male (Unprivileged Group)</td>
+          <td>38.50%</td>
+          <td>1.0729</td>
+          <td><strong>Compliant (&ge; 0.80)</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>As documented in Table IV, the Disparate Impact Ratio between male and female accounts is $\text{DIR} = 1.0729$. Because $\text{DIR} \in [0.80, 1.25]$, the framework strictly satisfies the Four-Fifths Rule, confirming that operational retention actions do not introduce demographic bias.</p>
+
+    <h3 class="subsection-heading">E. Agentic Retention Synthesis: Frontline Execution</h3>
+    <p>The synthesized JSON output generated by the OpenAI GPT-4o mini microservice for account 7590-VHVEG demonstrates execution integrity:</p>
+
+    <pre class="code-block">{
+  "customer_id": "7590-VHVEG",
+  "predicted_churn_prob": 0.884,
+  "churn_risk_level": "Critical",
+  "root_cause_diagnosis": "Customer exhibits extreme churn susceptibility driven by month-to-month contract fragility at 2 months tenure combined with elevated monthly fees ($89.85/mo) and unaddressed technical service vulnerabilities.",
+  "recommended_retention_bundle": {
+    "incentive_name": "Loyalty Continuity & Tech Shield Package",
+    "monthly_discount_usd": 15.00,
+    "duration_months": 6,
+    "service_add_on": "Complimentary Premium Tech Support & Cybersecurity Suite (6 months)",
+    "contract_commitment_required": "1-Year Fixed Price Agreement"
+  },
+  "financial_budget_check": {
+    "total_discount_value_usd": 90.00,
+    "budget_cap_usd": 120.00,
+    "within_budget": true
+  },
+  "outbound_personalized_email_body": "Dear Valued Customer, As a member of our network for the past 2 months, we want to ensure your connectivity experience is seamless. To optimize your account value, we have activated an exclusive $15.00/month billing credit for the next 6 months, alongside complimentary 24/7 dedicated VIP Tech Support and Cyber Shield protection when upgrading to our 1-Year Price-Lock Guarantee.",
+  "csm_call_battlecard_talking_points": [
+    "Acknowledge recent onboarding history and proactively address high-speed connectivity satisfaction.",
+    "Neutralize price sensitivity by introducing the $90.00 total loyalty subsidy over the next 6 months.",
+    "Position complimentary dedicated VIP technical support as account stabilization.",
+    "Secure verbal commitment to lock in the 1-year rate before the current month-to-month cycle concludes."
+  ]
+}</pre>
+
+    <h2 class="section-heading">V. Discussion &amp; MLOps Governance</h2>
+
+    <h3 class="subsection-heading">A. Theoretical Implications</h3>
+    <p>This research establishes three key theoretical insights: (1) Rank-ordering metrics such as ROC-AUC fail to reflect commercial profitability, as classifiers with identical ROC-AUC exhibit dramatically disparate financial yields when subjected to asymmetric cost matrices [5, 13]; (2) Without proper calibration, estimated scores cannot serve as valid probabilities in expected utility calculations, making Platt scaling an essential bridge [9, 10]; and (3) Coupling supervised tree ensembles with local explainability and constrained generative agents resolves the prediction-to-intervention divide [16].</p>
+
+    <h3 class="subsection-heading">B. Continuous Observability and Drift Guardrails</h3>
+    <p>To prevent model degradation post-deployment, the architecture establishes automated continuous monitoring:</p>
+    <ul>
+      <li><strong>Covariate Shift Tracking via Population Stability Index (PSI):</strong> Continuous tracking of inference distributions against baseline distributions [37]:
+      <div class="equation">
+        $$\text{PSI} = \sum_{k=1}^K (P_{k,\text{actual}} - P_{k,\text{expected}}) \times \ln\left(\frac{P_{k,\text{actual}}}{P_{k,\text{expected}}}\right)$$
+      </div>
+      A threshold of $\text{PSI} > 0.20$ triggers automated alerts and scheduled retraining workflows.</li>
+      <li><strong>Concept Drift Monitoring:</strong> Trailing 30-day calibration drift is monitored by computing rolling Brier scores against realized renewal outcomes.</li>
+    </ul>
+
+    <h2 class="section-heading">VI. Conclusion &amp; Future Research</h2>
+    <p>This paper introduced an integrated, cost-sensitive decision-theoretic framework for customer retention in recurring subscription business models. By coupling Platt-calibrated gradient boosting classifiers with asymmetric economic utility functions, we proved that optimizing operating decision thresholds yields substantial financial gains over conventional heuristic practices. Furthermore, integrating local feature attributions with budget-constrained agentic language models bridges the gap between predictive statistical modeling and operational field execution.</p>
+
+    <p>Future work will expand this framework by exploring multi-agent reinforcement learning (MARL) for continuous dynamic incentive bargaining, and developing federated, privacy-preserving calibration protocols for multi-tenant SaaS environments.</p>
+
+    <h2 class="section-heading">Declarations</h2>
+    <p class="no-indent"><strong>Data and Code Availability:</strong> All benchmark datasets, reproducible Python scripts, calibration routines, and agent orchestration pipelines are openly accessible at <a href="https://github.com/abdulwasiu6609/customer-retention-decision-theory" target="_blank" style="color: #000; text-decoration: underline;">https://github.com/abdulwasiu6609/customer-retention-decision-theory</a> and archived under Zenodo.</p>
+
+    <p class="no-indent"><strong>Declaration on Generative AI:</strong> During manuscript preparation, the author used generative AI tools solely for editorial formatting and proofreading. The author conceptualized the decision-theoretic framework, designed the empirical experiments, verified all mathematical derivations, and assumes full accountability for the manuscript content.</p>
+
+    <p class="no-indent"><strong>Conflict of Interest:</strong> The author declares no competing financial, professional, or commercial interests.</p>
+
+    <h2 class="section-heading">References</h2>
+    <div class="references">
+      <div class="ref-item">[1] H. Chen, R. H. L. Chiang, and V. C. Storey, "Business intelligence and analytics: From big data to big impact," <em>MIS Quarterly</em>, vol. 36, no. 4, pp. 1165-1188, 2012.</div>
+      <div class="ref-item">[2] T. H. Davenport, <em>Big Data at Work: Dispelling the Myths, Uncovering the Opportunities</em>. Harvard Business Review Press, 2014.</div>
+      <div class="ref-item">[3] S. Gupta, D. R. Lehmann, and J. A. Stuart, "Valuing customers," <em>Journal of Marketing Research</em>, vol. 41, no. 1, pp. 7-18, 2004.</div>
+      <div class="ref-item">[4] G. Shmueli, P. C. Bruce, P. Gedeck, and N. R. Patel, <em>Data Mining for Business Analytics: Concepts, Techniques, and Applications in Python</em>. John Wiley &amp; Sons, 2020.</div>
+      <div class="ref-item">[5] T. Verbraeken, W. Verbeke, and B. Baesens, "A novel profit maximizing metric for measuring classification performance of customer churn prediction models," <em>IEEE Transactions on Knowledge and Data Engineering</em>, vol. 24, no. 5, pp. 861-874, 2012.</div>
+      <div class="ref-item">[6] K. Coussement and K. W. De Bock, "Customer churn prediction in the online gambling industry: The value of employee opinions," <em>European Journal of Operational Research</em>, vol. 230, no. 1, pp. 156-166, 2013.</div>
+      <div class="ref-item">[7] W. Verbeke, D. Martens, C. Mues, and B. Baesens, "Building comprehensible customer churn prediction models with advanced rule induction techniques," <em>IEEE Transactions on Knowledge and Data Engineering</em>, vol. 23, no. 3, pp. 394-404, 2011.</div>
+      <div class="ref-item">[8] A. Lemmens and C. Croux, "Bagging and boosting classification trees to predict churn," <em>Journal of Marketing Research</em>, vol. 43, no. 2, pp. 276-286, 2006.</div>
+      <div class="ref-item">[9] C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, "On calibration of modern neural networks," in <em>Proc. 34th Int. Conf. Machine Learning (ICML)</em>, pp. 1321-1330, 2017.</div>
+      <div class="ref-item">[10] A. Niculescu-Mizil and R. Caruana, "Predicting good probabilities with supervised learning," in <em>Proc. 22nd Int. Conf. Machine Learning (ICML)</em>, pp. 625-632, 2005.</div>
+      <div class="ref-item">[11] C. Elkan, "The foundations of cost-sensitive learning," in <em>Proc. 17th Int. Joint Conf. Artificial Intelligence (IJCAI)</em>, vol. 17, no. 1, pp. 973-978, 2001.</div>
+      <div class="ref-item">[12] C. X. Ling and V. S. Sheng, "Cost-sensitive learning and the class imbalance problem," in <em>Encyclopedia of Machine Learning</em>, Springer, pp. 231-235, 2008.</div>
+      <div class="ref-item">[13] D. J. Hand, "Measuring classifier performance: A coherent alternative to the area under the ROC curve," <em>Machine Learning</em>, vol. 77, no. 1, pp. 103-123, 2009.</div>
+      <div class="ref-item">[14] D. J. Power, "Understanding data-driven decision support systems," <em>Information Systems Management</em>, vol. 25, no. 2, pp. 149-154, 2008.</div>
+      <div class="ref-item">[15] D. Sculley et al., "Hidden technical debt in machine learning systems," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, pp. 2503-2511, 2015.</div>
+      <div class="ref-item">[16] S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, and Y. Cao, "ReAct: Synergizing reasoning and acting in language models," in <em>Int. Conf. Learning Representations (ICLR)</em>, 2023.</div>
+      <div class="ref-item">[17] T. Chen and C. Guestrin, "XGBoost: A scalable tree boosting system," in <em>Proc. 22nd ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining</em>, pp. 785-794, 2016.</div>
+      <div class="ref-item">[18] G. Ke et al., "LightGBM: A highly efficient gradient boosting decision tree," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 30, pp. 3146-3154, 2017.</div>
+      <div class="ref-item">[19] A. V. Dorogush, V. Ershov, and A. Gulin, "CatBoost: Gradient boosting with categorical features support," in <em>NeurIPS Workshop on Machine Learning Systems</em>, 2018.</div>
+      <div class="ref-item">[20] D. Kahneman and A. Tversky, "Prospect theory: An analysis of decision under risk," <em>Econometrica</em>, vol. 47, no. 2, pp. 263-291, 1979.</div>
+      <div class="ref-item">[21] F. Provost and T. Fawcett, <em>Data Science for Business: What You Need to Know about Data Mining and Data-Analytic Thinking</em>. O'Reilly Media, 2013.</div>
+      <div class="ref-item">[22] J. Platt, "Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods," <em>Advances in Large Margin Classifiers</em>, vol. 10, no. 3, pp. 61-74, 1999.</div>
+      <div class="ref-item">[23] G. W. Brier, "Verification of forecasts expressed in terms of probability," <em>Monthly Weather Review</em>, vol. 78, no. 1, pp. 1-3, 1950.</div>
+      <div class="ref-item">[24] J. Achiam et al., "GPT-4 technical report," <em>arXiv preprint arXiv:2303.08774</em>, 2023.</div>
+      <div class="ref-item">[25] J. S. Park et al., "Generative agents: Interactive simulacra of human behavior," in <em>Proc. 36th ACM UIST</em>, pp. 1-22, 2023.</div>
+      <div class="ref-item">[26] S. M. Lundberg and S.-I. Lee, "A unified approach to interpreting model predictions," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, pp. 4765-4774, 2017.</div>
+      <div class="ref-item">[27] S. Barocas, M. Hardt, and A. Narayanan, <em>Fairness and Machine Learning: Limitations and Opportunities</em>. MIT Press, 2019.</div>
+      <div class="ref-item">[28] C. Dwork et al., "Fairness through awareness," in <em>Innovations in Theoretical Computer Science (ITCS)</em>, pp. 214-226, 2012.</div>
+      <div class="ref-item">[29] N. Mehrabi et al., "A survey on bias and fairness in machine learning," <em>ACM Computing Surveys</em>, vol. 54, no. 6, pp. 1-35, 2021.</div>
+      <div class="ref-item">[30] M. Feldman et al., "Certifying and removing disparate impact," in <em>Proc. 21st ACM SIGKDD</em>, pp. 259-268, 2015.</div>
+      <div class="ref-item">[31] M. Hardt, E. Price, and N. Srebro, "Equality of opportunity in supervised learning," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, pp. 3315-3323, 2016.</div>
+      <div class="ref-item">[32] F. Pedregosa et al., "Scikit-learn: Machine learning in Python," <em>Journal of Machine Learning Research</em>, vol. 12, pp. 2825-2830, 2011.</div>
+      <div class="ref-item">[33] L. Breiman, "Random forests," <em>Machine Learning</em>, vol. 45, no. 1, pp. 5-32, 2001.</div>
+      <div class="ref-item">[34] M. Armbrust et al., "Lakehouse: A new generation of open platforms that unify data warehousing and advanced analytics," in <em>Proc. 11th CIDR</em>, 2021.</div>
+      <div class="ref-item">[35] D. Kreuzberger, N. Kuhl, and S. Hirschl, "Machine learning operations (MLOps): Overview, definition, and architecture," <em>IEEE Access</em>, vol. 11, pp. 31866-31879, 2023.</div>
+      <div class="ref-item">[36] M. Zaharia et al., "Accelerating the machine learning lifecycle with MLflow," <em>IEEE Data Engineering Bulletin</em>, vol. 41, no. 4, pp. 39-45, 2018.</div>
+      <div class="ref-item">[37] B. Yurdakul, "Statistical properties of population stability index," Ph.D. dissertation, Western Michigan University, 2020.</div>
+    </div>
+
+    <div class="biography">
+      <p class="no-indent"><strong>Abdul Wasiu Adebayo</strong> (ORCID: 0009-0002-1681-5784) is the Founder and Lead Software Engineer at Techspance, Ibadan, Nigeria, and a graduate scholar at Nexford University, Washington, D.C., USA. His research focuses on distributed data architectures, cost-sensitive statistical learning, calibrated probability estimation, and agentic artificial intelligence systems for commercial decision automation.</p>
+    </div>
+
+  </div><!-- /two-column -->
+
+</div><!-- /paper -->
+
+</body>
+</html>

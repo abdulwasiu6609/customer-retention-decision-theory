@@ -1,0 +1,25 @@
+{
+  "customer_id": "8375-DKEBR",
+  "predicted_churn_prob": 0.9771628828094627,
+  "churn_risk_level": "Critical",
+  "root_cause_diagnosis": "Customer exhibits extreme churn susceptibility driven by month-to-month contract fragility at 1 months tenure combined with elevated monthly fee ($69.60/mo) and unaddressed technical service gaps.",
+  "recommended_retention_bundle": {
+    "incentive_name": "Loyalty Continuity & Tech Shield Package",
+    "monthly_discount_usd": 10.0,
+    "duration_months": 6,
+    "service_add_on": "Complimentary Premium Tech Support & Cybersecurity Suite (6 months)",
+    "contract_commitment_required": "1-Year Fixed Price Agreement"
+  },
+  "financial_budget_check": {
+    "total_discount_value_usd": 60.0,
+    "budget_cap_usd": 120.0,
+    "within_budget": true
+  },
+  "outbound_personalized_email_body": "Dear Customer, As a valued member of our network for the past 1 months, we noticed your current plan may not be delivering the maximum value for your connectivity needs. To ensure your complete peace of mind, we have activated an exclusive $10.00/month loyalty credit for the next 6 months, alongside complimentary access to our 24/7 dedicated VIP Tech Support and Cyber Shield protection when upgrading to our 1-Year Price-Lock Guarantee.",
+  "csm_call_battlecard_talking_points": [
+    "Acknowledge 1 months of continuous account history and thank customer.",
+    "Directly neutralize price sensitivity by introducing the $60.00 total annual loyalty subsidy.",
+    "Position the complimentary Complimentary Premium Tech Support & Cybersecurity Suite (6 months) as proactive account stabilization.",
+    "Secure verbal commitment to lock in the 1-year rate before pending month-to-month billing cycle close."
+  ]
+}

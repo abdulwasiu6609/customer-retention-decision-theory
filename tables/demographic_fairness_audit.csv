@@ -1,0 +1,4 @@
+demographic_attribute,reference_group,comparison_group,ref_sample_count,comp_sample_count,ref_selection_rate,comp_selection_rate,disparate_impact_ratio,four_fifths_rule_status,ref_tpr_recall,comp_tpr_recall,equal_opportunity_ratio
+SeniorCitizen,0,1,896,161,0.4621,0.764,1.6534,DISPARATE_SELECTION,0.8286,0.9437,1.1389
+gender,Male,Female,552,505,0.4909,0.5267,1.0729,PASS,0.8881,0.8299,0.9345
+Partner,Yes,No,513,544,0.3899,0.6195,1.589,DISPARATE_SELECTION,0.7864,0.8989,1.143
